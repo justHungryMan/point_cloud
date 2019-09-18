@@ -7,9 +7,10 @@ from operator import itemgetter
 #mesh.plot(cpos=[-1, 2, -5], show_edges=True)
 
 # Configuration
+'''
 N = 3
 GRID_SIZE = N * N * N
-
+'''
 # Extract points, bounds
 
 # Define some helpers - ignore these and use your own data!
@@ -112,37 +113,3 @@ def generate_tree(tree):
         generate_tree(tree["child"][0])
         generate_tree(tree["child"][1])
 
-
-'''
-points = sorted(points, key = itemgetter(0, 1, 2))
-tree = {
-    "element": points,
-    "child": [None] * 2
-}
-
-
-def orthogonalClustering(tree, bounds, xAxis, yAxis, zAxis):
-    tree["child"][0] = {
-        "elements": [],
-        "child": [None] * 2
-    }
-    tree["child"][1] = {
-        "elements": [],
-        "child": [None] * 2
-    }
-    elements = tree["elements"]
-    children = tree["child"]
-
-    if xAxis is True:
-        children[0] = elements[: len(elements) / 2]
-        children[1] = elements[len(elements / 2) :]
-        
-        
-
-
-
-point_cloud = pv.PolyData(points)
-print(point_cloud)
-
-point_cloud.plot(eye_dome_lighting=True)
-'''
