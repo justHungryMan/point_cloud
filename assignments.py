@@ -1,9 +1,6 @@
 # source & destination is both tree.
 import math
 
-
-
-
 def assignment(source, destination, queue = {"src": [], "det": []}):
     if source is None or destination is None:
         queue["src"].append(source)
