@@ -1,4 +1,3 @@
-
 # source & destination is both tree.
 
 element = [1, 2, 3]
@@ -121,21 +120,18 @@ test2det = {
     }]
 }
 
-queue = {
-        "src": [],
-        "det": []
-}
-def assignment(source, destination):
-    
+
+def assignment(source, destination, queue = {"src": [], "det": []}):
     if source is None or destination is None:
         queue["src"].append(source)
         queue["det"].append(destination)
     elif source["element"] is None and destination["element"] is None:
-        assignment(source["child"][0], destination["child"][0])
-        assignment(source["child"][1], destination["child"][1])
+        assignment(source["child"][0], destination["child"][0], queue)
+        assignment(source["child"][1], destination["child"][1], queue)
     else:
         queue["src"].append(source)
         queue["det"].append(destination)
+    return queue
 
 def stretch(queue):
     cluster1 = [] # source
@@ -169,18 +165,33 @@ def nodeToTree(nodeCluster, treeCluster, node, tree):
             nodeCluster.append(node)
             treeCluster.append(tree["child"][0])
         elif tree["child"][0]["element"] is None:
-            nodeToTree(nodeCluster, treeCluster, node, tree["child"[0]])
+            nodeToTree(nodeCluster, treeCluster, node, tree["child"][0])
     if tree["child"][1] is not None:
         if tree["child"][1]["element"] is not None:
             nodeCluster.append(node)
             treeCluster.append(tree["child"][1])
         elif tree["child"][1]["element"] is None:
-            nodeToTree(nodeCluster, treeCluster, node, tree["child"[1]])
+            nodeToTree(nodeCluster, treeCluster, node, tree["child"][1])
 
 def printQueue(cluster1, cluster2):
     print(cluster1)
     print(cluster2)
 
-assignment(test2src, test2det)
+def grid_assignment(source_grid, destination_grid, N = 3):
+    source = []
+    destination = []
+    
+    for i in range(N):
+        for j in range(N):
+            for k in range(N):
+                queue = assignment(source_grid[i][j][k], destination_grid[i][j][k])
+                cluster1, cluster2 = stretch(queue)
+                source += cluster1
+                destination += cluster2
+
+    return source, destination
+'''
+queue = assignment(test2src, test2det)
 cluster1, cluster2 = stretch(queue)
 printQueue(cluster1, cluster2)
+'''
