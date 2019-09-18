@@ -1,4 +1,5 @@
 # source & destination is both tree.
+import math
 
 element = [1, 2, 3]
 test1src = {
@@ -78,23 +79,23 @@ test2src = {
         "child": [{
             "element": None, #4
             "child": [{
-                "element": 7, #7
+                "element": [1, 2, 3], #7
                 "child": [None] * 2
             }, {
-                "element": 8, #8
+                "element": [4, 5, 6], #8
                 "child": [None] * 2
             }]
         }, {
             "element": None, #5
             "child": [{
-                "element": 9, #9
+                "element": [7, 8, 9], #9
                 "child": [None] * 2
             }, None]
         }]
     },{
         "element": None, #3
         "child": [None, {
-            "element": 6, #6
+            "element": [10, 11, 12], #6
             "child": [None] * 2
         }]
     }]
@@ -105,16 +106,16 @@ test2det = {
     "child": [{
         "element": None, #2
         "child": [{
-            "element": 4, #4
+            "element": [-1, -2, -3], #4
             "child": [None] * 2
         }, None]
     },{
         "element": None, #3
         "child": [{
-            "element": 5, #5
+            "element": [-4, -5, -6], #5
             "child": [None] * 2
         }, {
-            "element": 6, #6
+            "element": [-7, -8, -9], #6
             "child": [None] * 2
         }]
     }]
@@ -188,10 +189,36 @@ def grid_assignment(source_grid, destination_grid, N = 3):
                 cluster1, cluster2 = stretch(queue)
                 source += cluster1
                 destination += cluster2
+    
+    #removeNone(source, destination)
 
     return source, destination
-'''
+
+def removeNone(source, destination):
+    for i in range(len(source)):
+        if source[i] is None:
+            if i is 0:
+                source[0] = source[1]
+            elif i is len(source) - 1:
+                source[i] = source[i - 1]
+            elif distance(source[i - 1], destination[i]) < distance(source[i + 1], destination[i]):
+                source[i] = source[i - 1]
+            else:
+                source[i] = source[i + 1]
+        elif destination[i] is None:
+            if i is 0:
+                destination[0] = destination[1] 
+            elif i is len(source) - 1 :
+                destination[i] = source[i - 1]
+            elif distance(source[i], destination[i - 1]) < distance(source[i], destination[i + 1]):
+                destination[i] = destination[i - 1]
+            else:
+                destination[i] = destination[i + 1]
+            
+def distance(source, destination):
+    return (source["element"][0] - destination["element"][0]) ** 2 + (source["element"][1] - destination["element"][1]) ** 2 + (source["element"][2] - destination["element"][2]) ** 2
+
 queue = assignment(test2src, test2det)
 cluster1, cluster2 = stretch(queue)
+removeNone(cluster1, cluster2)
 printQueue(cluster1, cluster2)
-'''
