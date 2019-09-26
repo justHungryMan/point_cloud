@@ -15,6 +15,10 @@ GRID_SIZE = N * N * N
 dataset_teapot = examples.download_teapot()
 dataset_bunny = examples.download_bunny_coarse()
 
+#test
+#dataset_teapot.plot(cpos=[-1, 2, -5], show_edges=True)
+print(type(dataset_teapot.points))
+
 # Generate Points
 teapot_points, teapot_bounds = T.generate_points(dataset_teapot)
 bunny_points, bunny_bounds = T.generate_points(dataset_bunny)
@@ -28,6 +32,35 @@ T.geneate_grid_clustering(teapot_grid, bunny_grid, N)
 
 # Grid Assignment
 source, destination = AS.grid_assignment(teapot_grid, bunny_grid, N)
+
+
+# TEST
+FRAME = 6000
+filename = "test.mp4"
+
+
+sourceList = []
+for element in source:
+    sourceList.append(element["element"])
+source_dataset = pv.PolyData(np.array(sourceList))
+#source_dataset.plot(show_edges = True)
+
+destinationList = []
+for element in destination:
+    destinationList.append(element["element"])
+destination_dataset = pv.PolyData(np.array(destinationList))
+#destination_dataset.plot(show_edges = True)
+
+plotter = pv.Plotter()
+plotter.open_movie(filename)
+plotter.add_mesh(source_dataset, color='red')
+
+plotter.show(auto_close = False)
+plotter.write_frame()
+
+for i in range(FRAME):
+    source_dataset.points = destination_dataset.points * i / FRAME + source_dataset.points * (FRAME - i) / FRAME
+    plotter.write_frame()
 
 # Test
 AS.printQueue(source, destination)
